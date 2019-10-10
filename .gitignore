@@ -1,0 +1,7 @@
+.idea/
+target/
+src/main/java/org/devoteam/Tester.java
+src/main/java/org/devoteam/StarterPipeline2.java
+src/main/java/org/devoteam/Range.java
+src/main/java/org/devoteam/JdbcParallelReadDev.java
+
