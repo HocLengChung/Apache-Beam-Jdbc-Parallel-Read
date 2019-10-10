@@ -52,6 +52,8 @@ public class JdbcParallelRead {
       dataSource.setJdbcUrl("jdbc:mysql://google/<DATABASE_NAME>?cloudSqlInstance=<INSTANCE_CONNECTION_NAME>" +
               "&socketFactory=com.google.cloud.sql.mysql.SocketFactory&useSSL=false" +
               "&user=<MYSQL_USER_NAME>&password=<MYSQL_USER_PASSWORD>");
+
+
       dataSource.setMaxPoolSize(10);
       dataSource.setInitialPoolSize(6);
       JdbcIO.DataSourceConfiguration config
@@ -59,7 +61,7 @@ public class JdbcParallelRead {
 
     Pipeline p = Pipeline.create(
         PipelineOptionsFactory.fromArgs(args).withValidation().create());
-    String tableName = "Hello3";
+    String tableName = "HelloWorld";
     int fetchSize = 1000;
 //    Create range index chunks Pcollection
     PCollection<KV<String,Iterable<Integer>>> ranges =
@@ -95,11 +97,11 @@ public class JdbcParallelRead {
                     }
                 }
             }))
-            .apply(GroupByKey.create())
+            .apply("Break Fusion", GroupByKey.create())
     ;
 
 
-      ranges.apply(JdbcIO.<KV<String,Iterable<Integer>>,String>readAll()
+      ranges.apply(String.format("Read ALL %s", tableName), JdbcIO.<KV<String,Iterable<Integer>>,String>readAll()
               .withDataSourceConfiguration(config)
               .withFetchSize(fetchSize)
               .withCoder(StringUtf8Coder.of())
@@ -115,7 +117,7 @@ public class JdbcParallelRead {
                   }
               })
                       .withOutputParallelization(false)
-              .withQuery(String.format("select * from jdbcIO_readAll.%s where index_id >= ? and index_id < ?",tableName))
+              .withQuery(String.format("select * from <DATABASE_NAME>.%s where index_id >= ? and index_id < ?",tableName))
                       .withRowMapper((JdbcIO.RowMapper<String>) resultSet -> {
                           ObjectMapper mapper = new ObjectMapper();
                           ArrayNode arrayNode = mapper.createArrayNode();
