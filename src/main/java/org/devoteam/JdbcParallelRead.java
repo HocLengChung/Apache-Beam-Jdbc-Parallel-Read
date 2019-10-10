@@ -41,6 +41,8 @@ import java.sql.ResultSet;
  *   --project=<YOUR_PROJECT_ID>
  *   --stagingLocation=<STAGING_LOCATION_IN_CLOUD_STORAGE>
  *   --runner=DataflowRunner
+ *   Example command:
+ *   //    mvn compile exec:java -D exec.mainClass=org.devoteam.JdbcParallelRead -D exec.args="--runner=DataflowRunner --project=<YOUR_PROJECT> --region=<YOUR_REGION> --zone=<YOUR_ZONE> --gcpTempLocation=gs://<YOUR_BUCKET>/tmp/"
  */
 public class JdbcParallelRead {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcParallelRead.class);
@@ -148,4 +150,3 @@ public class JdbcParallelRead {
   }
 }
 
-//    mvn compile exec:java -D exec.mainClass=org.devoteam.JdbcParallelRead -D exec.args="--runner=DataflowRunner --project=<YOUR_PROJECT> --region=<YOUR_REGION> --zone=<YOUR_ZONE> --gcpTempLocation=gs://<YOUR_BUCKET>/tmp/"
